@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Bug Detector</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 700px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+        .log {
+            background: #e9ecef;
+            padding: 10px;
+            margin-top: 10px;
+            height: 200px;
+            overflow-y: scroll;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center text-primary">Automated Bug Detector</h2>
+    
+    <div class="mb-3">
+        <label class="form-label">Enter Website URL:</label>
+        <input type="text" class="form-control" id="website_url" placeholder="https://example.com">
+        <button class="btn btn-primary mt-2" onclick="startTesting()">Start Testing</button>
+    </div>
+
+    <hr>
+
+    <div class="mb-3">
+        <label class="form-label">Select Action:</label>
+        <select class="form-select" id="action">
+            <option value="CLICK">CLICK</option>
+            <option value="TYPE">TYPE</option>
+            <option value="VERIFY">VERIFY</option>
+            <option value="WAIT">WAIT</option>
+        </select>
+    </div>
+    
+    <div id="input-fields">
+        <label class="form-label">CSS Selector:</label>
+        <input type="text" class="form-control" id="selector" placeholder="e.g., #button-id">
+        <label class="form-label" id="text-label" style="display:none;">Text to Type:</label>
+        <input type="text" class="form-control" id="text" placeholder="Enter text" style="display:none;">
+    </div>
+    
+    <button class="btn btn-success mt-3" onclick="performAction()">Perform Action</button>
+
+    <hr>
+
+    <button class="btn btn-warning" onclick="generateReport()">Generate Bug Report</button>
+    <button class="btn btn-danger" onclick="stopTesting()">Stop Testing</button>
+    
+    <h3 class="mt-4">Logs:</h3>
+    <div class="log" id="logs"></div>
+    
+    <h3 class="mt-4">Generated Report:</h3>
+    <div class="log" id="report"></div>
+    <button id="download-btn" class="btn btn-info mt-2" style="display:none;">Download Report</button>
+</div>
+
+<script>
+    function logMessage(message) {
+        document.getElementById("logs").innerHTML += `<p>${message}</p>`;
+        Swal.fire({ icon: 'info', title: 'Log Update', text: message });
+    }
+
+    function startTesting() {
+        let url = document.getElementById("website_url").value;
+        fetch("/start_testing", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ website_url: url })
+        }).then(res => res.json()).then(data => {
+            logMessage(data.message);
+            Swal.fire('Success', data.message, 'success');
+        });
+    }
+
+    function performAction() {
+        let action = document.getElementById("action").value;
+        let selector = document.getElementById("selector").value;
+        let text = document.getElementById("text").value;
+
+        fetch("/perform_action", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action, selector, text })
+        }).then(res => res.json()).then(data => logMessage(data.message));
+    }
+
+    function generateReport() {
+        fetch("/generate_report")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("report").innerText = data.report;
+                document.getElementById("download-btn").style.display = 'block';
+                logMessage("Bug report generated!");
+            });
+    }
+
+    function stopTesting() {
+        fetch("/stop_testing")
+            .then(res => res.json())
+            .then(data => logMessage(data.message));
+    }
+
+    document.getElementById("action").addEventListener("change", function() {
+        let action = this.value;
+        let textLabel = document.getElementById("text-label");
+        let textInput = document.getElementById("text");
+        if (action === "TYPE") {
+            textLabel.style.display = "block";
+            textInput.style.display = "block";
+        } else {
+            textLabel.style.display = "none";
+            textInput.style.display = "none";
+        }
+    });
+
+    document.getElementById("download-btn").addEventListener("click", function() {
+        const text = document.getElementById("report").innerText;
+        const blob = new Blob([text], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "bug_report.txt";
+        link.click();
+    });
+</script>
+
+</body>
+</html>
+   

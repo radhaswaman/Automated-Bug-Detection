@@ -2,6 +2,7 @@
 
 A Flask-based platform integrating automated website testing, bug tracking, anomaly detection, and Gemini 1.5 Flash AI analysis with MySQL logging.
 
+![Project Banner](https://via.placeholder.com/800x200?text=AI+Powered+Testing+Platform)
 
 ## 🔥 Features
 - ✅ **Automated Website Testing** with Selenium & Undetected ChromeDriver
@@ -10,6 +11,8 @@ A Flask-based platform integrating automated website testing, bug tracking, anom
 - 📦 **MySQL Database Integration** for test logs storage
 - 📈 **Interactive Dashboard** with HTML templates
 - ⚡ **Real-time Testing Results** visualization
+
+---
 
 ## 🛠️ Installation
 Clone repository
@@ -21,13 +24,16 @@ pip install -r requirements.txt
 
 text
 
+---
+
 ## ⚙️ Configuration
 
 ### Google Gemini API Setup
 1. Get API key from [Google AI Studio](https://makersuite.google.com/app)
-2. Create `.env` file: [OPTIONAL]
+2. Create `.env` file (optional):
 GEMINI_API_KEY=your_api_key_here
 
+text
 
 ### MySQL Database Setup
 CREATE DATABASE testing_platform;
@@ -42,6 +48,7 @@ status_code INT,
 response_text TEXT
 );
 
+text
 
 ### Configure Database Connection (app.py)
 app.config['MYSQL_HOST'] = 'localhost'
@@ -49,18 +56,39 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'your_db_password'
 app.config['MYSQL_DB'] = 'testing_platform'
 
+text
+
+---
+
 ## 🚀 Usage
 Start Flask application
 python app.py
 
+text
+Access the platform at `http://localhost:5000`
 
+---
 
 ## 📂 Project Structure
 project-root/
 ├── templates/
-│ ├── final.html # Dashboard
-│ ├── index1.html # Selenium Bug Detection interface
+│ ├── final.html # Results dashboard
+│ ├── index1.html # Main testing interface
 │ └── API.html # API testing interface
 ├── app.py # Main application
-├── requirements.txt # Dependencies
-└── .env # Environment variables[OPTIONAL]
+├── requirements.txt # Dependency list
+└── .env # Environment variables (optional)
+
+text
+
+---
+
+## 📦 Dependencies
+- Flask 2.0+
+- Selenium 4.0+
+- undetected-chromedriver
+- google-generativeai
+- python-dotenv
+- mysql-connector-python
+
+---

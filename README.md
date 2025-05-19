@@ -12,6 +12,8 @@ A Flask-based platform integrating automated website testing, bug tracking, anom
 - ⚡ **Real-time Testing Results** visualization
 
 ---
+![Selenium Bug Detection](Selenium_BugDetection.png)
+![API Anomaly Detection](API_AnomalyDetection.png)
 
 ## 🛠️ Installation
 Clone repository
